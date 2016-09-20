@@ -14,6 +14,7 @@ import * as indexRoute from "./routes/index";
 class Server {
 
   public app: express.Application;
+  private toobusy:any = require('toobusy-js');
 
   /**
    * Bootstrap the application.
@@ -24,6 +25,12 @@ class Server {
    */
   public static bootstrap(): Server {
     return new Server();
+  }
+
+  public shutdown():void {
+    if (this.toobusy) {
+      this.toobusy.shutdown();
+    }
   }
 
   /**
@@ -69,6 +76,17 @@ class Server {
     this.app.use(express.static(path.join(__dirname, "public")));
     this.app.use(express.static(path.join(__dirname, "bower_components")));
 
+    // middleware which blocks requests when we're too busy 
+    let toobusy = require('toobusy-js');
+
+    this.app.use(function(req, res, next) {
+        if (toobusy()) {
+            res.send(503, "I'm busy right now, sorry.");
+        } else {
+            next();
+        }
+    });
+
     // catch 404 and forward to error handler
     this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
       var error = new Error("Not Found");
@@ -101,4 +119,4 @@ class Server {
 }
 
 var server = Server.bootstrap();
-export = server.app;
+export = server;
