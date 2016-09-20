@@ -34,7 +34,7 @@ curl
     -X POST 
     -H "Content-Type: application/json" 
     -u mySecretPwhaasToken: 
-    -d "{\"maxtime\":500, \"data\":\"The password I want to hash!\"}" 
+    -d "{\"maxtime\":500, \"plain\":\"The password I want to hash!\"}" 
     https://api.pwhaas.com/hash
 ```
 
