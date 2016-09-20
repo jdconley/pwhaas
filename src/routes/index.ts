@@ -3,6 +3,7 @@
 
 import * as express from "express";
 import * as argon2 from "argon2";
+import * as timing from "../timing";
 
 module Route {
     export class Index {
@@ -21,7 +22,7 @@ module Route {
 
             argon2.generateSalt(32).then(salt => {
                 argon2.hash(plain, salt, options).then(hash => {
-                    res.end({hash});
+                    res.json({hash, options, timing: new timing.Timing()});
                 });
             });
         }
@@ -35,7 +36,7 @@ module Route {
             const plain = req.param("plain");
 
             argon2.verify(hash, plain).then(match => {
-                res.end({match});
+                res.json({match, timing: new timing.Timing()});
             });
         }
     }
