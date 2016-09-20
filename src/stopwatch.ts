@@ -46,15 +46,21 @@ export class Stopwatch {
 
     elapsedMilliseconds():number {
         const elapsed = this.accumulate();
-        return elapsed[0] * 1e3 + elapsed[1] / 1e6;
+        return Stopwatch.hrtimeToMs(elapsed);
     }
 
-    stop():void {
-        this.accumulate();
+    private static hrtimeToMs(hrtime:number[]):number {
+        return hrtime[0] * 1e3 + hrtime[1] / 1e6;
+    }
+
+    stop():number {
         this.running = false;
+        const ms = this.elapsedMilliseconds();
+        return ms;
     }
 
-    reset():void {
+    reset(restart:boolean=false):number {
+        const elapsed = this.accumulate();
         if (this.isRunning()) {
             this.startHrtime = process.hrtime();
         } else {
@@ -62,5 +68,11 @@ export class Stopwatch {
         }
 
         this.accumulatedHrtime = null;
+
+        if (restart) {
+            this.start();
+        }
+
+        return Stopwatch.hrtimeToMs(elapsed);
     }
 }
