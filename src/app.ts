@@ -59,8 +59,8 @@ class Server {
    */
   private config() {
     //configure pug
-    //HACK: this assumes we are transpiling to a subdirectory two levels deep (it should just be configurable)
-    this.app.set("views", path.join(__dirname, "../../views"));
+    //HACK: this assumes we are transpiling to a subdirectory one level up (it should just be configurable)
+    this.app.set("views", path.join(__dirname, "../views"));
     this.app.set("view engine", "pug");
 
     //mount logger
