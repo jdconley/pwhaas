@@ -8,7 +8,10 @@
     },
     "exclude": [
         "node_modules",
-        "typings",
-        "views"
+        "views",
+        "bin"
+    ],
+    "types": [
+        "node"
     ]
 }

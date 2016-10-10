@@ -1,0 +1,21 @@
+{
+    "bench": {
+        "maxTimeMs": 100,
+        "saltLength": 16
+    },
+    "defaults": {
+        "maxTimeMs": 50
+    },
+    "auth": {
+        "users": [
+            {
+                "apiKey": "[Your API Key Here]",
+                "hashMode": "default"
+            },
+            {
+                "apiKey": "secret",
+                "hashMode": "all"
+            }
+        ]
+    }
+}

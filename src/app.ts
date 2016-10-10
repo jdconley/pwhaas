@@ -5,118 +5,129 @@ import * as express from "express";
 import * as path from "path";
 
 import * as indexRoute from "./routes/index";
+import { Bench } from "./bench";
+import { ConfigUserProvider } from "./user";
+import { Basic } from "./auth";
+import * as config from "config";
 
 /**
  * The server.
  *
  * @class Server
  */
-class Server {
+export class Server {
 
-  public app: express.Application;
-  private toobusy:any = require('toobusy-js');
+    app: express.Application;
+    bench: Bench;
+    private toobusy: any = require("toobusy-js");
 
-  /**
-   * Bootstrap the application.
-   *
-   * @class Server
-   * @method bootstrap
-   * @static
-   */
-  public static bootstrap(): Server {
-    return new Server();
-  }
-
-  public shutdown():void {
-    if (this.toobusy) {
-      this.toobusy.shutdown();
+    /**
+     * Bootstrap the application.
+     *
+     * @class Server
+     * @method bootstrap
+     * @static
+     */
+    public static bootstrap(): Server {
+        return new Server();
     }
-  }
 
-  /**
-   * Constructor.
-   *
-   * @class Server
-   * @constructor
-   */
-  constructor() {
-    //create expressjs application
-    this.app = express();
-
-    //configure application
-    this.config();
-
-    //configure routes
-    this.routes();
-  }
-
-  /**
-   * Configure application
-   *
-   * @class Server
-   * @method config
-   * @return void
-   */
-  private config() {
-    //configure pug
-    //HACK: this assumes we are transpiling to a subdirectory one level up (it should just be configurable)
-    this.app.set("views", path.join(__dirname, "../views"));
-    this.app.set("view engine", "pug");
-
-    //mount logger
-    //this.app.use(logger("dev"));
-
-    //mount json form parser
-    this.app.use(bodyParser.json());
-
-    //mount query string parser
-    this.app.use(bodyParser.urlencoded({ extended: true }));
-
-    //add static paths
-    this.app.use(express.static(path.join(__dirname, "public")));
-    this.app.use(express.static(path.join(__dirname, "bower_components")));
-
-    // middleware which blocks requests when we're too busy 
-    let toobusy = require('toobusy-js');
-
-    this.app.use(function(req, res, next) {
-        if (toobusy()) {
-            res.send(503, "I'm busy right now, sorry.");
-        } else {
-            next();
+    public shutdown(): void {
+        if (this.toobusy) {
+            this.toobusy.shutdown();
         }
-    });
+    }
 
-    // catch 404 and forward to error handler
-    this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-      var error = new Error("Not Found");
-      err.status = 404;
-      next(err);
-    });
-  }
+    /**
+     * Constructor.
+     *
+     * @class Server
+     * @constructor
+     */
+    constructor() {
+        //create expressjs application
+        this.app = express();
 
-  /**
-   * Configure routes
-   *
-   * @class Server
-   * @method routes
-   * @return void
-   */
-  private routes() {
-    //get router
-    let router: express.Router;
-    router = express.Router();
+        //bench tool
+        this.bench = new Bench();
 
-    //create routes
-    var index: indexRoute.Index = new indexRoute.Index();
+        //configure application
+        this.config();
 
-    //home page
-    router.get("/", index.index.bind(index.index));
+        //configure routes
+        this.routes();
+    }
 
-    //use router middleware
-    this.app.use(router);
-  }
+    public init(): Promise<any> {
+        return this.bench.init(config.get("bench"));
+    }
+
+    private static nocache = (req: express.Request, res: express.Response, next: express.NextFunction): any => {
+        res.setHeader("Cache-Control", "private, no-cache, no-store, must-revalidate");
+        res.setHeader("Expires", "-1");
+        res.setHeader("Pragma", "no-cache");
+        return next();
+    };
+
+    /**
+     * Configure application
+     *
+     * @class Server
+     * @method config
+     * @return void
+     */
+    private config() {
+        //configure pug
+        this.app.set("views", path.join(__dirname, "../views"));
+        this.app.set("view engine", "pug");
+
+        //mount logger
+        //this.app.use(logger("dev"));
+
+        //mount json form parser
+        this.app.use(bodyParser.json());
+
+        //mount query string parser
+        this.app.use(bodyParser.urlencoded({ extended: true }));
+
+        //add static paths
+        this.app.use(express.static(path.join(__dirname, "public")));
+
+        // middleware which blocks requests when we're too busy 
+        let toobusy = require("toobusy-js");
+
+        this.app.use(function(req: express.Request, res: express.Response, next: express.NextFunction) {
+            if (toobusy()) {
+                //TODO: json response if json in request
+                res.send(503, "I'm busy right now, sorry.");
+            } else {
+                next();
+            }
+        });
+
+        // catch 404 and forward to error handler
+        this.app.use(function (err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+            var error = new Error("Not Found");
+            err.status = 404;
+            next(err);
+        });
+    }
+
+    private routes() {
+        const router: express.Router = express.Router();
+
+        //home page
+        const index: indexRoute.Index = new indexRoute.Index(
+            config.get("defaults"), this.bench);
+        router.get("/", index.index.bind(index.index));
+
+        //api endpoints
+        const auth = new Basic(new ConfigUserProvider());
+        router.post("/hash", Server.nocache, auth.execute.bind(auth), index.hash.bind(index));
+        router.post("/verify", Server.nocache, auth.execute.bind(auth), index.verify.bind(index));
+
+        this.app.use(router);
+    }
 }
 
-var server = Server.bootstrap();
-export = server;
+export const server = Server.bootstrap();
