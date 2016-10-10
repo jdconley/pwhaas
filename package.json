@@ -9,11 +9,11 @@
   },
   "scripts": {
     "start": "node dist/bin/www",
-    "debug": "npm run compile && npm start",
+    "debug": "npm run build && npm start",
     "clean": "rm -rf dist",
-    "compile": "tslint --project tslint.json && tsc -d && tsc -p . && cp -r bin dist && cp -r views dist && cp -r config dist",
-    "prepublish": "npm run clean && npm run compile",
-    "pretest": "npm run compile",
+    "build": "tslint --project tslint.json && tsc -d && tsc -p . && cp -r bin views config public dist",
+    "prepublish": "npm run clean && npm run build",
+    "pretest": "npm run build",
     "test": "mocha dist/test/*.js"
   },
   "keywords": [
@@ -45,8 +45,10 @@
     "express-winston": "^2.0.0",
     "lodash": "^4.16.4",
     "pug": "^2.0.0-beta3",
+    "serve-favicon": "^2.3.0",
     "toobusy-js": "^0.5.1",
-    "winston": "^2.2.0"
+    "winston": "^2.2.0",
+    "winston-config": "^0.5.0"
   },
   "devDependencies": {
     "@types/body-parser": "0.0.33",
@@ -57,6 +59,7 @@
     "@types/lodash": "^4.14.37",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.45",
+    "@types/serve-favicon": "^2.2.28",
     "@types/winston": "0.0.28",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",

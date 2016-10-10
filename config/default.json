@@ -17,5 +17,25 @@
                 "hashMode": "all"
             }
         ]
+    },
+    "log": {
+        "default": {
+            "console": {
+                "level": "debug",
+                "colorize": true
+            }
+        },
+        "request": {
+            "console": {
+                "level": "info",
+                "colorize": true
+            }
+        },
+        "requestError": {
+            "console": {
+                "level": "warn",
+                "colorize": true
+            }
+        }
     }
 }

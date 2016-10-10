@@ -1,3 +1,5 @@
+"use strict";
+
 import * as argon2 from "argon2themax";
 import { Stopwatch } from "./stopwatch";
 import * as _ from "lodash";

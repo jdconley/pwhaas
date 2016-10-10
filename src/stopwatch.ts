@@ -1,3 +1,5 @@
+"use strict";
+
 export class Stopwatch {
     private started: [number, number];
     elapsed: number;

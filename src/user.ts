@@ -1,3 +1,5 @@
+"use strict";
+
 import * as config from "config";
 import * as _ from "lodash";
 

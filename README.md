@@ -27,42 +27,53 @@ Pwhaas also serializes requests and only hashes one password at a time per proce
 Pwhaas utilizes JSON for both requests and responses. This is for future expansion of the API and ease of consumption.
 
 ### Hash some data 
-`The password I want to hash!` will be hashed with argon2i, utilizing up to 500ms of hash compute time.
+A 32 byte salt will be generated and `The password I want to hash!` will be hashed with Argon2i, utilizing up to 500ms of hash compute time.
 
-```
-curl 
-    -X POST 
-    -H "Content-Type: application/json" 
-    -u mySecretPwhaasToken: 
-    -d "{\"maxtime\":500, \"plain\":\"The password I want to hash!\"}" 
-    https://api.pwhaas.com/hash
+```sh
+
+curl -X POST -H "Content-Type: application/json" -u "[Your API Key Here]:" -d '{"maxtime":500, "plain":"The password I want to hash!"}' https://api.pwhaas.com/hash
+
 ```
 
 In response you will receive a JSON document with either an error or the hash accompanied by some additional metadata.
 
 The "options" node contains the options that were sent to the [node-argon2](https://github.com/ranisalt/node-argon2/) hash function.
 
-The "hash" node contains the hashed data. In this example the hashed data is `encoded_hash_data_is_here_treat_this_as_an_opaque_string`. Store this and use it in the call to "verify" later. The timing values are for your reference.
+The "hash" node contains the hashed data. Store this and use it in the call to `verify` later.
 
-The "timing" node contains the actual amount of milliseconds your request spent in the queue, and how many milliseconds we spent hashing it.
+The "timing" node contains the number of milliseconds pwhaas spent generating salt and hashing. If you have a paid pwhaas account, these values are used for metering/billing.
+
+The following data was returned in response to an actual call to `hash`.
 
 ```json
-    {
-        "options": {
-            "timeCost": 4,
-            "memoryCost": 24,
-            "parallelism": 128
-        },
-        "hash": "encoded_hash_data_is_here_treat_this_as_an_opaque_string",
-        "timing": {
-            "queue": 0.5,
-            "hash": 456.9
-        }
-    }
+{
+    "hash": "$argon2i$v=19$m=4096,t=3,p=1$k3F2rWWXZ9MSTatHdd8Rgw$04F8gLV5HnwI8DdLDmB+2MPlPsSwkX0ETpVeuJzWX7o",
+    "options": {
+        "timeCost": 3,
+        "memoryCost": 12,
+        "parallelism": 1,
+        "argon2d": false
+    },
+    "timing": {
+        "salt": 0.084359,
+        "hash": 9.15277
+    } 
+}
 ```
 
+### Verify a hash
+When your users log back in you will need to verify their hashes. Pwhaas can do that for you. It uses a constant time comparison algorithm to mitigate timing attacks.
+
+```sh
+
+curl -X POST -H "Content-Type: application/json" -u "[Your API Key Here]:" -d '{"hash":"$argon2i$v=19$m=4096,t=3,p=1$k3F2rWWXZ9MSTatHdd8Rgw$04F8gLV5HnwI8DdLDmB+2MPlPsSwkX0ETpVeuJzWX7o", "plain":"The password I want to hash!"}' https://api.pwhaas.com/verify
+
+```
 
 
 ## FAQ
 _I don't trust you, why would I send you my users' passwords?_
-Fair enough. Then don't! Grab this code and run the service yourself, or hash passwords locally before you send them so pwhaas ends up just hashing a hash. We don't log passwords anywhere. Everything is transmitted over SSL, so do certificate validation. Validating certificates coupled with the passwords only being transmitted in the body of the HTTP Request limits the attack surface area.
+Fair enough. Then don't! Grab this code and run the service yourself, or hash passwords locally before you send them so pwhaas ends up just hashing a hash.
+If you use our [pwhaas Node.JS module](https://github.com/jdconley/pwhaas-js) it uses Argon2 locally before sending the password to the pwhaas service.
+We don't log passwords anywhere. Everything is transmitted over SSL, so do certificate validation. Validating certificates coupled with the plain only 
+being transmitted in the body of the HTTP Request limits the attack surface area.

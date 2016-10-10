@@ -1,3 +1,5 @@
+"use strict";
+
 import * as express from "express";
 import Middleware from "./middleware";
 import * as logging from "./logging";
