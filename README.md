@@ -74,6 +74,5 @@ curl -X POST -H "Content-Type: application/json" -u "[Your API Key Here]:" -d '{
 ## FAQ
 _I don't trust you, why would I send you my users' passwords?_
 Fair enough. Then don't! Grab this code and run the service yourself, or hash passwords locally before you send them so pwhaas ends up just hashing a hash.
-If you use our [pwhaas Node.JS module](https://github.com/jdconley/pwhaas-js) it uses Argon2 locally before sending the password to the pwhaas service.
-We don't log passwords anywhere. Everything is transmitted over SSL, so do certificate validation. Validating certificates coupled with the plain only 
-being transmitted in the body of the HTTP Request limits the attack surface area.
+Our [pwhaas Node.JS module](https://github.com/jdconley/pwhaas-js) hashes passwords with a fast configuration of Argon2 locally before sending the password to the pwhaas service.
+In production everything is transmitted over SSL.
