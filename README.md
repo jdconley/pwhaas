@@ -70,6 +70,18 @@ curl -X POST -H "Content-Type: application/json" -u "[Your API Key Here]:" -d '{
 
 ```
 
+A call to `verify` will return a result JSON object indicating whether the plain and the hash are a match, as well as the time spent verifying the hash. If you have a paid pwhaas account, this is used for metering/billing.
+
+```json
+
+{
+    "match": true,
+    "timing": {
+        "verify": 9.596143
+    }
+}
+
+```
 
 ## FAQ
 _I don't trust you, why would I send you my users' passwords?_

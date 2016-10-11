@@ -2,6 +2,46 @@ html
     head
         title Pwhaas - Password Hash as a Service
         link(rel="shortcut-icon" href="favicon.ico")
+        style(type="text/css").
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 700px;
+                font-size: larger;
+            }
     body
         h1 Password Hash As A Service
-        p I am a RESTful service that can hash things.
+        p A RESTful service that fully utilizes hardware to hash passwords. We're talking 10's of CPU cores, up to 4GB of RAM, and up to one second of CPU time for each password.
+        p This website is pretty ugly, but that's not important. It's good at hashing passwords. Yes, it was built in 2016.
+
+        h2 Why do I care?
+        p Glad you asked! Well, have you been paying attention to the news lately? Sites are hacked. Databases are stolen. Passwords are released. Do you want your users' passwords released? I bet your liability insurance company doesn't.
+        p Every software engineer these days knows they cannot store plain text passwords, so they use a one-way hash on the passwords. However, attackers don't just give up. When a new hack takes place, attackers get right to work utilizing GPU's and huge multi-core systems to try to crack those passwords.
+        p If you're unfamiliar with the term "one-way hash", it just means to convert the password to an unreadable mumbo jumbo of information in a repeatable way using lots of fancy math. When properly designed, this math insures that there is no way you can retrieve someone's password once it is hashed. All you can do is repeat the same hash algorithm on a plain text password and see if it matches the original one. Hashing is not encryption, because with encryption you can retrieve the information. That's why websites and apps cannot send you your password when you forget it. They do not know the password either.
+        p So, even if someone steals your database, if you have hashed passwords the attacker would have to try to guess each person's password individually by repeating the hashing algorithm that was used to protect the passwords. That's good. The problem is that attackers use very powerful hardware to try to guess passwords, and can often guess at a password thousands or millions of times per second. That's where we come in.
+        p
+            strong Pwhaas is a service that lets the good guys hash passwords with the same powerful hardware used by attackers.
+            span This makes the attacker's job 100's of times harder as it increases the amount of time they have to spend guessing the passwords, and might even make them give up. 
+
+        h2 Usage
+        p 
+            span See 
+            a(href="https://github.com/jdconley/pwhaas") pwhaas on Github
+            span  for usage information. You can install the 
+            a(href="https://github.com/jdconley/pwhaas-js") pwhaas Node.JS module
+            span  to get going quickly if you use Node.JS 4.0+.
+
+        h2 Pricing
+        p It's expensive to hash each password with 10's of threads in parallel using up to 4GB of memory. There are significant hardware requirements. You'll have to pay for it. Pricing depends on the level of security and datacenter you desire. Service locality is important in order to limit latency. We can hash in various regions of Azure, AWS, Google Cloud, and SoftLayer.
+        p
+            span We are currently in a private beta period and availability is limited. 
+            a(href="mailto:info@pwhaas.com") Send us an email
+            span  with your requirements if you want to participate or otherwise chat about password hashing.
+
+        h3 FREE Tier
+        p Just kidding, there is no free tier. You can download the open source server and run it yourself if you want "free".
+        p But you don't really want to spend the cash you'll need to get the same level of hashing security we offer at pwhaas.com.
+        p Go ahead, look at how much it'll cost to run a 36 core system (or two if you think availability is important) all the time for the relatively rare occasion that you need to hash/verify a password. We'll wait...
+        p Welcome back! See above.
+        
+        p(style="margin-top: 400px") &copy; Copyright 2016, JD Conley.
+        
