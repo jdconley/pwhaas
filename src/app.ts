@@ -18,7 +18,25 @@ const expressWinston: any = require("express-winston");
 
 export class Server implements plugins.DependencyResolver {
     getDependency<T>(name: string): T {
-        return plugins.getPlugin<T>(name);
+        const plugin = plugins.getPlugin<T>(name);
+        if (plugin) {
+            return plugin;
+        }
+
+        // Expose some well-known things that aren't in the plugin system
+        if (name === "server") {
+            return this as any;
+        }
+
+        if (name === "bench") {
+            return this.bench as any;
+        }
+
+        if (name === "plugins") {
+            return plugins as any;
+        }
+
+        return null;
     }
 
     app: express.Application;
