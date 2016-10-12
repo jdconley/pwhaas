@@ -1,6 +1,6 @@
 {
     "bench": {
-        "maxTimeMs": 500,
+        "maxTimeMs": 1000,
         "saltLength": 32
     },
     "defaults": {

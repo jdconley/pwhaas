@@ -20,6 +20,7 @@ export class Server {
     bench: Bench;
     private toobusy: any = require("toobusy-js");
     userProvider: UserProvider;
+    private initialized: boolean = false;
 
     public static bootstrap(): Server {
         return new Server();
@@ -45,27 +46,36 @@ export class Server {
     public async init(): Promise<any> {
         await this.bench.init(config.get("bench"));
         await this.userProvider.init();
+        this.initialized = true;
     }
 
-    private static nocache = (req: express.Request, res: express.Response, next: express.NextFunction): any => {
+    private static nocache = (req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.setHeader("Cache-Control", "private, max-age=0, no-cache, no-store, must-revalidate");
         res.setHeader("Expires", "-1");
         res.setHeader("Pragma", "no-cache");
-        return next();
+        next();
     };
 
-    private static shortcache = (req: express.Request, res: express.Response, next: express.NextFunction): any => {
+    private static shortcache = (req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.setHeader("Cache-Control", "public, max-age=60");
         res.setHeader("Expires", new Date(Date.now() + 60000).toUTCString());
-        return next();
+        next();
     };
 
-    private toobusyHandler = (req: express.Request, res: express.Response, next: express.NextFunction): any => {
+    private toobusyHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
         if (this.toobusy()) {
             //TODO: json response if json in request
             res.send(503, "I'm busy right now, sorry.");
         } else {
-            return next();
+            next();
+        }
+    }
+
+    private initializedHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        if (this.initialized) {
+            next();
+        } else {
+            res.send(503, "Not yet initialized. Try again in a minute.");
         }
     }
 
@@ -125,6 +135,7 @@ export class Server {
             "/hash",
             Server.nocache,
             this.toobusyHandler.bind(this),
+            this.initializedHandler.bind(this),
             auth.execute.bind(auth),
             index.hash.bind(index));
 
@@ -132,8 +143,16 @@ export class Server {
             "/verify",
             Server.nocache,
             this.toobusyHandler.bind(this),
+            this.initializedHandler.bind(this),
             auth.execute.bind(auth),
             index.verify.bind(index));
+
+        router.get(
+            "/timings",
+            Server.nocache,
+            this.toobusyHandler.bind(this),
+            this.initializedHandler.bind(this),
+            index.timings.bind(index));
 
         this.app.use(router);
 

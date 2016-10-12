@@ -14,18 +14,17 @@ app.set("port", port);
 //create http server
 var server = http.createServer(app);
 
+//listen on provided ports
+server.listen(port);
+
+//add error handler
+server.on("error", onError);
+
+//start listening on port
+server.on("listening", onListening);
+
 //asynchronously init the app, to do expensive startup things.
-ourApp.init().then(function() {
-    //listen on provided ports
-    server.listen(port);
-
-    //add error handler
-    server.on("error", onError);
-
-    //start listening on port
-    server.on("listening", onListening);
-});
-
+ourApp.init();
 
 //shutdown the app gracefully
 process.on('SIGINT', function() {
