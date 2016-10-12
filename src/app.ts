@@ -11,6 +11,7 @@ import { Basic } from "./auth";
 import * as config from "config";
 import * as Logger from "./logging";
 import * as favicon from "serve-favicon";
+import * as letsencrypt from "./routes/letsencrypt";
 
 const expressWinston: any = require("express-winston");
 
@@ -153,6 +154,11 @@ export class Server {
             this.toobusyHandler.bind(this),
             this.initializedHandler.bind(this),
             index.timings.bind(index));
+
+        router.get(
+            "/.well-known/acme-challenge/:challenge",
+            Server.nocache,
+            letsencrypt.token.bind(letsencrypt));
 
         this.app.use(router);
 
