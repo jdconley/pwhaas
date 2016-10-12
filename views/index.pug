@@ -31,17 +31,17 @@ html
                 span  to get going quickly if you use Node.JS 4.0+.
 
             h2 Pricing
-            p It's expensive to hash each password with 10's of threads in parallel using up to 4GB of memory. There are significant hardware requirements. You'll have to pay for it. Pricing depends on the level of security and datacenter you desire. Service locality is important in order to limit latency. We can hash in various regions of Azure, AWS, Google Cloud, and SoftLayer.
+            p Pricing depends on the level of security you desire, but starts at $10/mo for hobby and small business projects.
             p
                 span We are currently in a private beta period and availability is limited. 
                 a(href="mailto:info@pwhaas.com") Send us an email
                 span  with your requirements if you want to participate or otherwise chat about password hashing.
 
             h3 FREE Tier
-            p Just kidding, there is no free tier. You can download the open source server and run it yourself if you want "free".
-            p But you don't really want to spend the cash you'll need to get the same level of hashing security we offer at pwhaas.com.
-            p Go ahead, look at how much it'll cost to run a 36 core system (or two if you think availability is important) all the time for the relatively rare occasion that you need to hash/verify a password. We'll wait...
-            p Welcome back! See above.
+            p Free accounts are available, but you will be limited on the cost of the hashing you can perform and severly limited on the rate of hashing. 
+
+            h2 Why would I send you my users' passwords?
+            p Fair enough. Then don't! Grab the code and run the service yourself, or hash passwords locally before you send them so pwhaas ends up just hashing a hash. Our pwhaas Node.JS module does this with a fast configuration of Argon2 locally before sending the password to the pwhaas service. Everything is also transmitted over SSL.
             
             p(style="margin-top: 400px") &copy; Copyright 2016, JD Conley.
             
