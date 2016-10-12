@@ -1,27 +1,37 @@
 # What?
 A microservice.
 
-That can hash strings.
+That can hash passwords.
 
-Offloads CPU intensive password hashing from your application servers so they
-can asynchronously wait on IO instead.
+Pwhaas is a service that lets the good guys hash passwords with the same powerful hardware
+used by attackers. This makes the attacker's job 100's of times harder as it increases the
+amount of time they have to spend guessing the passwords.
 
-Hashes passwords with the latest recommended salt generating and memory-hard
+This service offloads CPU intensive password hashing from your application servers so they
+can do what they are good at and asynchronously wait on IO instead.
+
+It hashes passwords with the latest recommended salt generating and memory-hard
 algorithm optimized for x86 ([Argon2](https://github.com/P-H-C/phc-winner-argon2)).
-It is designed to hash in parallel on high CPU count systems with 4GB of memory
+It is designed to hash in parallel on high CPU count systems with up to 4GB of memory
 utilized in order to make the resulting hashes difficult to crack with GPUs or ASIC
 processors.
 
-Use me at https://www.pwhaas.com where you can currently utilize up to 36 cores
-for each password you hash. Having a single instance of this machine dedicated to
-hashing would cost you over $1,000/mo on AWS.
+Use me at https://www.pwhaas.com and get acccess to some big iron if you don't
+want to host this yourself.
 
 ## Why?
-How do you decide on the trade off of security vs user experience? I'm guessing you
-probably do something that lets a user login within a second or two, right? Typically
-we (as in devs) run VM instances for general purpose web application servers that happen
-to also do password hashing. I've never used the largest systems available just for
-password hashing. Have you?
+Typically we (as in software developers) run VM instances for general purpose web
+application servers that happen to also do password hashing. I've never used the
+largest systems available just for password hashing. Have you?
+
+Have you been paying attention to the news lately? Sites are hacked. Databases are stolen.
+Passwords are released. Do you want your users' passwords released? I bet your liability
+insurance company doesn't.
+
+Experienced software engineers these days know they cannot store plain text passwords, so
+they use a one-way hash on the passwords. However, attackers don't just give up. When
+a new hack takes place, attackers get right to work utilizing GPU's and huge multi-core
+systems to try to crack those passwords.
 
 We (software engineers) should all be hashing passwords with the highest levels of
 security possible while still maintaining a great user experience. We owe it to our users.
@@ -33,7 +43,7 @@ Attackers that crack passwords sure do. And now you can, or you can use the ones
 Pwhaas will automatically use as much of the available CPU and RAM on a system as it can.
 In the API you can specify how many milliseconds of compute time you want to use. The first
 time pwhaas starts up on a system it runs [argon2themax](https://github.com/jdconley/argon2themax)
-to determine how long it takes to run Argon2i at the possible memory and iteration
+to determine how long it takes to run Argon2i various memory and iteration
 settings, while maxing out the CPU cores. The test algorithm favors using more memory
 over more iterations in order to fill a given amount of time but also always does at
 least 3 iterations. If the timings are well known, or you want to use different settings,
