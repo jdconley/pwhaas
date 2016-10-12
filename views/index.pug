@@ -8,12 +8,12 @@ html
                 font-size: larger;
             }
     body
-        div(style="max-width: 700px; margin: 100px auto;")
+        div(style="max-width: 666px; margin: 100px auto;")
             h1 Password Hash As A Service
             p
                 strong Pwhaas is a service that lets the good guys hash passwords with the same powerful hardware used by attackers. 
-            p This makes the attacker's job 100's of times harder as it increases the amount of time they have to spend guessing the passwords.
-            p It is a RESTful API that fully utilizes current generation fast hardware to hash passwords. We're talking 10's of CPU cores, up to 4GB of RAM, and up to one second of CPU time for each password.
+            p This makes the attacker's job 100's of times harder as it increases the amount of time they have to spend guessing passwords obtained in a data breach.
+            p It is a RESTful API that fully utilizes current generation fast hardware to hash passwords. We're talking 10's of CPU cores, up to 4GB of RAM, and up to two seconds of CPU time for each password.
 
             h2 Why do I care?
             p 
@@ -33,17 +33,67 @@ html
                 span  to get going quickly if you use Node.JS 4.0+.
 
             h2 Pricing
-            p Pricing depends on the level of security you desire, but starts at $10/mo for hobby and small business projects.
+            p We have special introductory pricing! Lock in savings of 50% or more, for life!
             p
-                span We are currently in a private beta period and availability is limited. 
+                span We are currently in a private beta period for paid accounts and availability is limited. 
                 a(href="mailto:info@pwhaas.com") Send us an email
                 span  with your requirements if you want to participate or otherwise chat about password hashing.
 
-            h3 FREE Tier
-            p Free accounts are available, but you will be limited on the cost of the hashing you can perform and severly limited on the rate of hashing. 
-
-            h2 Why would I send you my users' passwords?
-            p Fair enough. Then don't! Grab the code and run the service yourself, or hash passwords locally before you send them so pwhaas ends up just hashing a hash. Our pwhaas Node.JS module does this with a fast configuration of Argon2 locally before sending the password to the pwhaas service. Everything is also transmitted over SSL.
+            div
+                h3 Free
+                p To access the free tier just use the default API Key in our libraries, or set it to "secret".
+                ul
+                    li 1,000ms hash time limit
+                    li 8 VM CPU cores
+                    li Shared VM's, requests can overlap
+                    li 
+                        span Hash cost of 1,000
+                        sup 
+                            small 1
+                    li 100 hashes/day
+            div
+                h3 Hobby - $20/month
+                p Moderate protection for hobbyists and startups with real users.
+                ul
+                    li 1,000ms hash time limit
+                    li 16 VM CPU cores
+                    li Dedicated VM instance per request
+                    li 
+                        span Hash cost of 2,150
+                        sup 
+                            small 1
+                    li 100 hashes/day, $0.01 per hash second thereafter
+            div
+                h3 Paranoid - $100/mo
+                p For sensitive applications where having the best possible hash is desired.
+                ul
+                    li 2,000ms hash time limit
+                    li 48 CPU cores on metal (no Virtual Machines)
+                    li Dedicated hardware instance per request
+                    li 
+                        span Hash cost of 13,000
+                        sup 
+                            small 1
+                    li 1,000 hashes/day, $0.05 per hash second thereafter
             
-            p(style="margin-top: 400px") &copy; Copyright 2016, JD Conley.
+            h3 Enterprise - Get Quote
+            p 
+                span Need something more? Want dedicated instances to call your own? Desire VM's or metal in certain data centers? 
+                a(href="mailto:info@pwhaas.com") Let us know!
+
+            h2 FAQ
+            h3 Hesitant to send your users' passwords to a new service?
+            p Fair enough. Then don't! Grab the code and run the service yourself, or hash passwords locally before you send them so pwhaas ends up just hashing a hash. The pwhaas libraries do this with a fast configuration of Argon2 locally before sending the password to the pwhaas service. Everything is also transmitted over SSL/TLS.
+            
+            h3 What if Pwhaas is down?
+            p No problem! The pwhaas libraries automatically fall back to local hashing and verifying. The local hashes will be much less secure than the ones in the cloud, but are probably about 10x as secure as the default Argon2 options. Verifying will take significantly longer than our API if your hardware is not similar to ours.
+
+            p(style="margin-top: 400px")
+                sup 
+                    small 1
+                small Hash costs are estimates based on measurements taken from representative systems and may vary depending on the actual hardware, concurrent requests, and operating system overhead. Costs are based on the formula: [parallelism] x [memory cost] x [time cost]. The default hash cost is 36, based on the formula 3 x 12 x 1 = 36.
+
+            p 
+                span &copy; Copyright 2016, 
+                a(href="https://www.linkedin.com/in/jdconley") JD Conley.
             
