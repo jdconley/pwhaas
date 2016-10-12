@@ -23,7 +23,7 @@ module Route {
 
         getOptions(user: User, req: express.Request): argon2.Options {
             if (user && user.hashMode === HASH_MODE_ALL) {
-                const maxtime = Number(req.param("maxtime") || this.defaults.maxTimeMs);
+                const maxtime = Number(req.params.maxtime || this.defaults.maxTimeMs);
                 const timing = this.bench.getMaxTiming(maxtime);
 
                 return timing.options;
@@ -33,8 +33,8 @@ module Route {
         }
 
         public async hash(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
-            const plain = req.param("plain");
-            const maxtime = Number(req.param("maxtime") || this.defaults.maxTimeMs);
+            const plain = req.body.plain;
+            const maxtime = Number(req.params.maxtime || this.defaults.maxTimeMs);
             const options = this.getOptions((req as any).user, req);
 
             const sw = new Stopwatch();
@@ -49,8 +49,8 @@ module Route {
         }
 
         public async verify(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
-            const hash = req.param("hash");
-            const plain = req.param("plain");
+            const hash = req.body.hash;
+            const plain = req.body.plain;
 
             const sw = new Stopwatch();
             const match = await argon2.verify(hash, plain);
