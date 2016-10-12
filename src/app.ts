@@ -6,21 +6,24 @@ import * as path from "path";
 
 import * as indexRoute from "./routes/index";
 import { Bench } from "./bench";
-import { UserProvider, ConfigUserProvider } from "./user";
-import { Basic } from "./auth";
+import { Middleware } from "./middleware";
 import * as config from "config";
 import * as Logger from "./logging";
 import * as favicon from "serve-favicon";
 import * as letsencrypt from "./routes/letsencrypt";
 
+import * as plugins from "./plugins/index";
+
 const expressWinston: any = require("express-winston");
 
-export class Server {
+export class Server implements plugins.DependencyResolver {
+    getDependency<T>(name: string): T {
+        return plugins.getPlugin<T>(name);
+    }
 
     app: express.Application;
     bench: Bench;
     private toobusy: any = require("toobusy-js");
-    userProvider: UserProvider;
     private initialized: boolean = false;
 
     public static bootstrap(): Server {
@@ -36,17 +39,18 @@ export class Server {
     constructor() {
         this.app = express();
         this.bench = new Bench();
-
-        //TODO: load provider based on configuration
-        this.userProvider = new ConfigUserProvider();
-
-        this.config();
-        this.routes();
     }
 
     public async init(): Promise<any> {
+        // Load plugins before config and routes.
+        await plugins.init(this);
+
+        // Config and routes may use certain types of plugins. 
+        this.config();
+        this.routes();
+
         await this.bench.init(config.get("bench"));
-        await this.userProvider.init();
+
         this.initialized = true;
     }
 
@@ -131,7 +135,7 @@ export class Server {
         router.get("/", Server.shortcache, index.index.bind(index.index));
 
         //api endpoints
-        const auth = new Basic(this.userProvider);
+        const auth = this.getDependency<Middleware>("auth");
         router.post(
             "/hash",
             Server.nocache,

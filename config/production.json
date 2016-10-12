@@ -6,16 +6,29 @@
     "defaults": {
         "maxTimeMs": 500
     },
-    "auth": {
-        "users": [
-            {
-                "apiKey": "[Your API Key Here]",
-                "hashMode": "default"
-            },
-            {
-                "apiKey": "secret",
-                "hashMode": "default"
+    "plugins": [
+        {
+            "name": "users",
+            "module": "./configusers",
+            "class": "ConfigUserProvider",
+            "options": {
+                "users": [
+                    {
+                        "apiKey": "[Your API Key Here]",
+                        "hashMode": "default"
+                    },
+                    {
+                        "apiKey": "secret",
+                        "hashMode": "default"
+                    }
+                ]
             }
-        ]
-    }
+        },
+        {
+            "name": "auth",
+            "module": "./basicauth",
+            "class": "Basic",
+            "options": {}
+        }
+    ]
 }

@@ -1,11 +1,12 @@
 "use strict";
 
 import * as express from "express";
-import Middleware from "./middleware";
-import * as logging from "./logging";
-import { UserProvider } from "./user";
+import * as logging from "../logging";
+import { UserProvider } from "../user";
+import { Middleware } from "../middleware";
+import { PwhaasPlugin, DependencyResolver } from ".";
 
-export class Basic extends Middleware {
+export class Basic implements Middleware, PwhaasPlugin  {
     public async execute(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
         const failAuth = (code?: number) => {
             res.statusCode = code || 401;
@@ -67,8 +68,13 @@ export class Basic extends Middleware {
     }
 
     private logger = logging.getLogger("auth");
+    private userProvider: UserProvider;
 
-    constructor(private userProvider: UserProvider, options?: any) {
-        super(options);
+    init(options: any): Promise<any> {
+        return Promise.resolve();
+    }
+
+    resolveDependencies(ioc: DependencyResolver): void {
+        this.userProvider = ioc.getDependency<UserProvider>("users");
     }
 }
