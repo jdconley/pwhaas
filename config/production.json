@@ -1,10 +1,10 @@
 {
     "bench": {
-        "maxTimeMs": 1000,
+        "maxTimeMs": 2000,
         "saltLength": 32
     },
     "defaults": {
-        "maxTimeMs": 500
+        "maxTimeMs": 1000
     },
     "plugins": [
         {

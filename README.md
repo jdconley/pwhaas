@@ -65,11 +65,11 @@ API and ease of consumption.
 
 ### Hash some data 
 A 32 byte salt will be generated and `The password I want to hash!` will be hashed with
-Argon2i, utilizing up to 500ms of hash compute time.
+Argon2i, utilizing up to 1,000ms of hash compute time.
 
 ```sh
 
-curl -X POST -H "Content-Type: application/json" -u "[Your API Key Here]:" -d '{"maxtime":500, "plain":"The password I want to hash!"}' https://api.pwhaas.com/hash
+curl -X POST -H "Content-Type: application/json" -u "[Your API Key Here]:" -d '{"maxtime":1000, "plain":"The password I want to hash!"}' https://api.pwhaas.com/hash
 
 ```
 
