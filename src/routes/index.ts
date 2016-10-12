@@ -58,6 +58,10 @@ module Route {
 
             res.json({match, timing: {verify: verifyTiming}});
         }
+
+        public timings(req: express.Request, res: express.Response, next: express.NextFunction) {
+            res.json(this.bench.getTimings());
+        }
     }
 }
 
