@@ -7,6 +7,7 @@ import * as argon2 from "argon2themax";
 import { Stopwatch } from "../stopwatch";
 import { Bench } from "../bench";
 import { User, HASH_MODE_ALL, HASH_MODE_DEFAULT } from "../user";
+import * as logging from "../logging";
 
 module Route {
     export interface Options {
@@ -14,6 +15,8 @@ module Route {
     }
 
     export class Index {
+        logger = logging.getLogger("api");
+
         constructor(private defaults: Options, private bench: Bench) {
         }
 
@@ -26,15 +29,25 @@ module Route {
                 const maxtime = Number(req.params.maxtime || this.defaults.maxTimeMs);
                 const timing = this.bench.getMaxTiming(maxtime);
 
+                this.logger.info(`User has all access. Maxtime Requested: ${maxtime}. Timing chosen: `, timing);
                 return timing.options;
             }
 
+            // Give the user up to the default maxTime if they are a "default" user
+            if (user && user.hashMode === HASH_MODE_DEFAULT) {
+                const maxtime = Math.min(Number(req.params.maxtime || this.defaults.maxTimeMs), this.defaults.maxTimeMs);
+                const timing = this.bench.getMaxTiming(maxtime);
+
+                this.logger.info(`User has default access. Maxtime Requested: ${maxtime}. Timing chosen: `, timing);
+                return timing.options;
+            }
+
+            this.logger.info("User has no access. Maxtime Requested. Using Argon2 defaults:", argon2.defaults);
             return argon2.defaults;
         }
 
         public async hash(req: express.Request, res: express.Response, next: express.NextFunction): Promise<any> {
             const plain = req.body.plain;
-            const maxtime = Number(req.params.maxtime || this.defaults.maxTimeMs);
             const options = this.getOptions((req as any).user, req);
 
             const sw = new Stopwatch();
