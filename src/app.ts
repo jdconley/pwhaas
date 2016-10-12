@@ -149,7 +149,7 @@ export class Server {
 
         router.get(
             "/timings",
-            Server.nocache,
+            Server.shortcache,
             this.toobusyHandler.bind(this),
             this.initializedHandler.bind(this),
             index.timings.bind(index));
