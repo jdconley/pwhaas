@@ -25,8 +25,7 @@ application servers that happen to also do password hashing. I've never used the
 largest systems available just for password hashing. Have you?
 
 Have you been paying attention to the news lately? Sites are hacked. Databases are stolen.
-Passwords are released. Do you want your users' passwords released? I bet your liability
-insurance company doesn't.
+Passwords are released.
 
 Experienced software engineers these days know they cannot store plain text passwords, so
 they use a one-way hash on the passwords. However, attackers don't just give up. When

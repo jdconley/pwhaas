@@ -8,19 +8,21 @@ html
                 font-size: larger;
             }
     body
-        div(style="max-width: 700px; margin: 0 auto;")
+        div(style="max-width: 700px; margin: 100px auto;")
             h1 Password Hash As A Service
-            p A RESTful service that fully utilizes hardware to hash passwords. We're talking 10's of CPU cores, up to 4GB of RAM, and up to one second of CPU time for each password.
-            p This website is pretty ugly, but that's not important. It's good at hashing passwords. Yes, it was built in 2016.
-
-            h2 Why do I care?
-            p Glad you asked! Well, have you been paying attention to the news lately? Sites are hacked. Databases are stolen. Passwords are released. Do you want your users' passwords released? I bet your liability insurance company doesn't.
-            p Every software engineer these days knows they cannot store plain text passwords, so they use a one-way hash on the passwords. However, attackers don't just give up. When a new hack takes place, attackers get right to work utilizing GPU's and huge multi-core systems to try to crack those passwords.
-            p If you're unfamiliar with the term "one-way hash", it just means to convert the password to an unreadable mumbo jumbo of information in a repeatable way using lots of fancy math. When properly designed, this math insures that there is no way you can retrieve someone's password once it is hashed. All you can do is repeat the same hash algorithm on a plain text password and see if it matches the original one. Hashing is not encryption, because with encryption you can retrieve the information. That's why websites and apps cannot send you your password when you forget it. They do not know the password either.
-            p So, even if someone steals your database, if you have hashed passwords the attacker would have to try to guess each person's password individually by repeating the hashing algorithm that was used to protect the passwords. That's good. The problem is that attackers use very powerful hardware to try to guess passwords, and can often guess at a password thousands or millions of times per second. That's where we come in.
             p
                 strong Pwhaas is a service that lets the good guys hash passwords with the same powerful hardware used by attackers. 
-                span This makes the attacker's job 100's of times harder as it increases the amount of time they have to spend guessing the passwords, and might even make them give up. 
+            p This makes the attacker's job 100's of times harder as it increases the amount of time they have to spend guessing the passwords.
+            p It is a RESTful API that fully utilizes current generation fast hardware to hash passwords. We're talking 10's of CPU cores, up to 4GB of RAM, and up to one second of CPU time for each password.
+
+            h2 Why do I care?
+            p 
+                span Glad you asked! Well, have you been paying attention to the news lately? Sites are hacked. Databases are stolen. Passwords are released. There are even 
+                a(href="https://haveibeenpwned.com/") web services
+                span  dedicated to keeping consumers informed about leaks.
+            p Every software engineer these days knows they cannot store plain text passwords, so they use a one-way hash on the passwords. However, attackers don't just give up. When a new hack takes place, attackers get right to work utilizing GPU's and huge multi-core systems to try to crack those passwords.
+            p If you're unfamiliar with the term "one-way hash", it just means to convert the password to an unreadable mumbo jumbo of information in a repeatable way using lots of fancy math. When properly designed, this math insures that there is no way you can retrieve someone's password once it is hashed. All you can do is repeat the same hash algorithm on a plain text password and see if it matches the original one. Hashing is not encryption, because with encryption you can retrieve the information. That's why websites and apps cannot send you your password when you forget it. They do not know the password either.
+            p So, even if someone steals your database, if you have hashed passwords the attacker would have to try to guess each person's password individually by repeating the hashing algorithm that was used to protect the passwords. That's good. The problem is that attackers use very powerful hardware that is usually 100x or more powerful than the typical server used to create the hashes, and they can often guess at a password thousands or millions of times per second. That's where we come in.
 
             h2 Usage
             p 
