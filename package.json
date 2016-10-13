@@ -7,6 +7,7 @@
         "type": "git",
         "url": "git+https://github.com/jdconley/pwhaas.git"
     },
+    "private": true,
     "scripts": {
         "start": "npm run build && node dist/bin/www",
         "clean": "rm -rf dist",
