@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jdconley/pwhaas.svg?branch=master)](https://travis-ci.org/jdconley/pwhaas) 
+
 # What?
 A microservice.
 
