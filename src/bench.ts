@@ -35,7 +35,7 @@ export class Bench {
         this.logger.info(`Found ${result.timings.length} timings in ${sw.elapsed}ms`);
 
         this.selector = argon2.Selection.getSelectionStrategy(
-            argon2.Selection.SelectionStrategyType.ClosestMatch);
+            argon2.Selection.SelectionStrategyType.MaxCost);
 
         this.selector.initialize(result);
 
