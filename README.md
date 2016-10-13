@@ -11,7 +11,7 @@ This service offloads CPU intensive password hashing from your application serve
 can do what they are good at and asynchronously wait on IO instead.
 
 It hashes passwords with the latest recommended salt generating and memory-hard
-algorithm optimized for x86 ([Argon2](https://github.com/P-H-C/phc-winner-argon2)).
+algorithm optimized for x86: ([Argon2](https://github.com/P-H-C/phc-winner-argon2)).
 It is designed to hash in parallel on high CPU count systems with up to 4GB of memory
 utilized in order to make the resulting hashes difficult to crack with GPUs or ASIC
 processors.
