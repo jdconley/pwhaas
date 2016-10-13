@@ -26,7 +26,7 @@ module Route {
 
         getOptions(user: User, req: express.Request): argon2.Options {
             if (user && user.hashMode === HASH_MODE_ALL) {
-                const maxtime = Number(req.params.maxtime || this.defaults.maxTimeMs);
+                const maxtime = Number(req.body.maxtime || this.defaults.maxTimeMs);
                 const timing = this.bench.getMaxTiming(maxtime);
 
                 this.logger.info(`User has all access. Maxtime Requested: ${maxtime}. Timing chosen: `, timing);
@@ -35,7 +35,7 @@ module Route {
 
             // Give the user up to the default maxTime if they are a "default" user
             if (user && user.hashMode === HASH_MODE_DEFAULT) {
-                const maxtime = Math.min(Number(req.params.maxtime || this.defaults.maxTimeMs), this.defaults.maxTimeMs);
+                const maxtime = Math.min(Number(req.body.maxtime || this.defaults.maxTimeMs), this.defaults.maxTimeMs);
                 const timing = this.bench.getMaxTiming(maxtime);
 
                 this.logger.info(`User has default access. Maxtime Requested: ${maxtime}. Timing chosen: `, timing);
