@@ -1,7 +1,8 @@
 {
     "bench": {
         "maxTimeMs": 100,
-        "saltLength": 16
+        "saltLength": 16,
+        "osTmpCache": false
     },
     "defaults": {
         "maxTimeMs": 50
