@@ -88,7 +88,7 @@ export class Server implements plugins.DependencyResolver {
     private toobusyHandler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
         if (this.toobusy()) {
             //TODO: json response if json in request
-            res.send(503, "I'm busy right now, sorry.");
+            res.status(503).send("I'm busy right now, sorry.");
         } else {
             next();
         }
@@ -98,7 +98,7 @@ export class Server implements plugins.DependencyResolver {
         if (this.initialized) {
             next();
         } else {
-            res.send(503, "Not yet initialized. Try again in a minute.");
+            res.status(503).send("Not yet initialized. Try again in a minute.");
         }
     }
 
