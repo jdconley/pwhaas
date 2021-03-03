@@ -46,7 +46,7 @@
         "express-winston": "^2.0.0",
         "fs-promise": "^0.5.0",
         "lodash": "^4.16.4",
-        "pug": "^2.0.0-beta3",
+        "pug": "^3.0.1",
         "serve-favicon": "^2.3.0",
         "toobusy-js": "^0.5.1",
         "winston": "^2.2.0",
